@@ -14,7 +14,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 {
     use Authenticatable, CanResetPassword;
 
-    protected $adminRole = 'admin';
+    const ROLE_ADMIN = 'admin';
 
     protected $table = 'users';
 
@@ -24,31 +24,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function lesson()
     {
-        return $this->hasMany(Lesson::class,'user_id');
+        return $this->hasMany(Lesson::class, 'user_id');
     }
 
     public function activity()
     {
-        return $this->hasMany(Activity::class,'user_id');
+        return $this->hasMany(Activity::class, 'user_id');
     }
 
     public function follower()
     {
-        return $this->hasMany(Follow::class,'follower_id');
+        return $this->hasMany(Follow::class, 'follower_id');
     }
 
     public function followee()
     {
-        return $this->hasMany(Follow::class,'followee_id');
+        return $this->hasMany(Follow::class, 'followee_id');
     }
 
     public function isAdmin()
     {
-        if($this->type == $adminRole)
-        {
-            return true;
-        }
-        return false;
+        return ($this->type == User::ROLE_ADMIN);
     }
 }
 
