@@ -35,12 +35,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($activities as $activity)
-                        <tr>
-                            <td>{{ $activity->created_at }}</td>
-                            <td>{{ $activity->activity }}</td>
-                        </tr>
-                    @endforeach
+                @foreach ($activities as $activity)
+                    <tr>
+                        <td>{{ $activity->created_at }}</td>
+                        <td>{{ $activity->activity }}</td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
             <hr>

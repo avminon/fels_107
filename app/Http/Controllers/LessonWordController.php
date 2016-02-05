@@ -5,6 +5,7 @@ use App\Events\ActivityEvent;
 use App\Http\Controllers\Controller;
 use App\Lesson;
 use App\LessonWord;
+use App\User;
 use Illuminate\Http\Request;
 use Session;
 
@@ -69,7 +70,7 @@ class LessonWordController extends Controller
                 'activity' => $this->user->name . " learned " . intval(session()->get('questionIndex')) .
                 "/" . intval(session()->get('wordCount')) . " in " . session()->get('lessonName'),
                 'lessonId' => $lessonId,
-                'type' => 1,
+                'type' => User::WITH_LESSONID,
             ];
             \Event::fire(new ActivityEvent($eventData));
 

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Activity;
 use App\Auth;
+use App\Events\ActivityEvent;
 use App\Follow;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -14,6 +15,10 @@ use Session;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function index()
     {
@@ -110,16 +115,34 @@ class UserController extends Controller
 
     public function followUser($userId)
     {
+        $followee = User::findorFail(intval($userId));
         $follow = new Follow;
-        $follow->addFollowee($this->user->id, $userId);
+        $follow->addFollowee($this->user->id, $followee->id);
+
+        $eventData = [
+            'userId' => $this->user->id,
+            'activity' => $this->user->name . " followed " . $followee->name,
+            'lessonId' => User::NO_LESSONID,
+            'type' => User::FOLLOW_ACTIVITY,
+        ];
+        \Event::fire(new ActivityEvent($eventData));
 
         return redirect('/users/list');
     }
 
     public function unFollowUser($userId)
     {
+        $followee = User::findorFail(intval($userId));
         $follow = new Follow;
-        $follow->removeFollowee($this->user->id, $userId);
+        $follow->removeFollowee($this->user->id, $followee->id);
+
+        $eventData = [
+            'userId' => $this->user->id,
+            'activity' => $this->user->name . " unfollowed " . $followee->name,
+            'lessonId' => User::NO_LESSONID,
+            'type' => User::FOLLOW_ACTIVITY,
+        ];
+        \Event::fire(new ActivityEvent($eventData));
 
         return redirect('/users/list');
     }

@@ -17,6 +17,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Authenticatable, CanResetPassword;
 
     const ROLE_ADMIN = 'admin';
+    const FOLLOW_ACTIVITY = 2;
+    const LESSON_ACTIVITY = 1;
+    const NO_LESSONID = 0;
+    const WITH_LESSONID = 1;
 
     protected $table = 'users';
 
