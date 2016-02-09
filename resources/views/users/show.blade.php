@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('title')
-    Welcome!
+    {{ $title }}
 @endsection
 
 @section('content')
@@ -40,27 +40,26 @@
         </div>
         <div class="col-md-9">
             <h2>Activities</h2>
-            <table class="col-md-9">
-                @if (count($activities) == App\Activity::NO_ACTIVITY)
-                    <thead><tr>No Activities Found</tr></thead>
-                @else
-                <thead>
-                    <tr>
-                        <th class="col-md-3">Date</th>
-                        <th class="col-md-6">Activity</th>
-                    </tr>
-                </thead>
-                <tbody>
+            @if (count($activities) == App\Activity::NO_ACTIVITY)
+            {!!  trans('common.users.no_activities_found') !!}
+            @else
+                <table class="col-md-9">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Date</th>
+                            <th class="col-md-6">Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     @foreach ($activities as $activity)
-
                         <tr>
                             <td>{{ $activity->created_at }}</td>
                             <td>{{ $activity->activity }}</td>
                         </tr>
                     @endforeach
-                </tbody>
-                @endif
-            </table>
+                    </tbody>
+                </table>
+            @endif
             <hr>
         </div>
     </div>

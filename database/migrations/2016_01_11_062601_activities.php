@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class Activities extends Migration
 {
@@ -16,12 +16,12 @@ class Activities extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')
-                    ->references('id')->on('users')
-                    ->onDelete('cascade');
-            $table->integer('lesson_id')->unsigned();
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->integer('lesson_id')->unsigned()->default(0);
             $table->foreign('lesson_id')
-                    ->references('id')->on('lessons')
-                    ->onDelete('cascade');
+                ->references('id')->on('lessons')
+                ->onDelete('cascade');
             $table->string('activity');
             $table->tinyInteger('type')->unsigned()->default(0);
             $table->timestamps();

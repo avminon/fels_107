@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Activity;
 use App\Auth;
+use App\Events\ActivityEvent;
 use App\Follow;
 use App\Http\Controllers\Controller;
+use App\LessonWord;
 use App\User;
 use Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,20 +16,24 @@ use Session;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function index()
     {
         $title = trans('common.users.page_title');
 
         $activity = new Activity;
-
-        $activities = $activity->getAllUserActivities($this->user->id);
+        $words = LessonWord::where('user_id', $this->user->id)->get();
 
         $view = ($this->user->isAdmin()) ? 'home' : 'users.home';
         return view($view, [
             'user' => $this->user,
-            'activities' => $activities,
+            'activities' => $activity->getAllUserActivities($this->user->id),
             'title' => $title . $this->user->id,
+            'words' => $words,
         ]);
     }
 
@@ -39,8 +45,7 @@ class UserController extends Controller
 
         $activities = $activity->getUserFolloweeActivities($this->user->id);
 
-        $view = ($this->user->isAdmin()) ? 'home' : 'users.view_activities';
-        return view($view, [
+        return view('users.view_activities', [
             'user' => $this->user,
             'activities' => $activities,
             'title' => $title . $this->user->id,
@@ -52,6 +57,19 @@ class UserController extends Controller
         return view('users.edit', [
             'title' => 'Edit category',
             'user' => $this->user,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = User::findOrFail(intval($id));
+        $words = LessonWord::where('user_id', $user->id)->get();
+        $activity = new Activity;
+        return view('users.show', [
+            'title' => $user->name . "'s Profile",
+            'activities' => $activity->getAllUserActivities($user->id),
+            'user' => $user,
+            'words' => $words,
         ]);
     }
 
@@ -110,16 +128,34 @@ class UserController extends Controller
 
     public function followUser($userId)
     {
+        $followee = User::findorFail(intval($userId));
         $follow = new Follow;
-        $follow->addFollowee($this->user->id, $userId);
+        $follow->addFollowee($this->user->id, $followee->id);
+
+        $eventData = [
+            'userId' => $this->user->id,
+            'activity' => $this->user->name . " followed " . $followee->name,
+            'lessonId' => Activity::NO_LESSONID,
+            'type' => Activity::FOLLOW_ACTIVITY,
+        ];
+        \Event::fire(new ActivityEvent($eventData));
 
         return redirect('/users/list');
     }
 
     public function unFollowUser($userId)
     {
+        $followee = User::findorFail(intval($userId));
         $follow = new Follow;
-        $follow->removeFollowee($this->user->id, $userId);
+        $follow->removeFollowee($this->user->id, $followee->id);
+
+        $eventData = [
+            'userId' => $this->user->id,
+            'activity' => $this->user->name . " unfollowed " . $followee->name,
+            'lessonId' => Activity::NO_LESSONID,
+            'type' => Activity::FOLLOW_ACTIVITY,
+        ];
+        \Event::fire(new ActivityEvent($eventData));
 
         return redirect('/users/list');
     }

@@ -37,6 +37,9 @@
                             {!! link_to('/home', 'Home') !!}
                         </li>
                         <li>
+                            {!! link_to('users/list', 'Users') !!}
+                        </li>
+                        <li>
                             {!! link_to('words/', 'Words') !!}
                         </li>
                         @if ((!auth()->guest()) && ($user->isAdmin()))
@@ -47,13 +50,10 @@
                             <li>
                                 {!! link_to('lessons/', 'Lessons') !!}
                             </li>
-                        @endif
-                        <li>
-                            {!! link_to('users/list', 'Users') !!}
-                        </li>
-                        <li>
+                            <li>
                             {!! link_to('activities', 'Activities') !!}
-                        </li>
+                            </li>
+                        @endif
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         @if (auth()->guest())
@@ -68,7 +68,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ auth()->user()->name }} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        {!! link_to('user/' . auth()->id(), 'My Profile') !!}
+                                        {!! link_to_route('users.edit', 'Update Profile') !!}
                                     </li>
                                     <li>
                                         {!! link_to('/auth/logout', 'Logout') !!}
