@@ -44,8 +44,7 @@ class UserController extends Controller
 
         $activities = $activity->getUserFolloweeActivities($this->user->id);
 
-        $view = ($this->user->isAdmin()) ? 'home' : 'users.view_activities';
-        return view($view, [
+        return view('users.view_activities', [
             'user' => $this->user,
             'activities' => $activities,
             'title' => $title . $this->user->id,
@@ -57,6 +56,18 @@ class UserController extends Controller
         return view('users.edit', [
             'title' => 'Edit category',
             'user' => $this->user,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = User::findOrFail(intval($id));
+
+        $activity = new Activity;
+        return view('users.show', [
+            'title' => $user->name . "'s Profile",
+            'activities' => $activity->getAllUserActivities($user->id),
+            'user' => $user,
         ]);
     }
 

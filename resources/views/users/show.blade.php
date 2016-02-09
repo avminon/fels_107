@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('title')
-    Welcome!
+    {{ $title }}
 @endsection
 
 @section('content')

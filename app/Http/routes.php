@@ -41,4 +41,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/users/edit', ['as' => 'users.edit', 'uses' => 'UserController@edit']);
     Route::patch('/users/update', ['as' => 'users.update', 'uses' => 'UserController@update']);
 
+    Route::get('/users/show/{id}', 'UserController@show');
+
 });

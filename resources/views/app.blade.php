@@ -68,7 +68,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ auth()->user()->name }} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        {!! link_to('user/' . auth()->id(), 'My Profile') !!}
+                                        {!! link_to_route('users.edit', 'Update Profile') !!}
                                     </li>
                                     <li>
                                         {!! link_to('/auth/logout', 'Logout') !!}

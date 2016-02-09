@@ -1,31 +1,45 @@
 @extends('app')
 
 @section('title')
-    {{ trans('common.users.home.panel_label') }}
+    Welcome!
 @endsection
 
 @section('content')
     <div class="panel-body">
         <div class="col-md-3">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-heading text-center">Welcome {{ $user->email }}!</h4>
-                </div>
                 <div class="panel-body text-center">
-                    {!! Html::image(
-                        config()->get('paths.user_image') . $user->avatar,
-                        $user->name,
-                        ['class' => 'thumbnail'])
-                    !!}
+                    <table>
+                        <tr>
+                            <td>
+                                {!! Html::image(config()->get('paths.user_image') . $user->avatar, $user->name, [
+                                        'class' => 'thumbnail',
+                                        'alt' => $user->name,
+                                        'title' => $user->name
+                                    ])
+                                !!}
+                            </td>
+                            <td>{{ $user->name }}</td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="panel-footer text-center">
-                    {!! link_to_route('users.edit', 'Update Profile') !!}
+                    <table>
+                        <tr>
+                            <th>Followers</th>
+                            <th>&nbsp;</th>
+                            <th>Following</th>
+                        </tr>
+                        <tr>
+                            <td>{{ count($user->followees) }}</td>
+                            <td>&nbsp;</td>
+                            <td>{{ count($user->followers) }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
         <div class="col-md-9">
-            {!! link_to('words/', 'Words') !!}
-            {!! link_to('categories/', 'Lesson') !!}
             <h2>Activities</h2>
             <table class="col-md-9">
                 <thead>
